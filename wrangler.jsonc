@@ -20,7 +20,7 @@
     "HUB_URL": "https://property-and-technology-hub.eh2homes.workers.dev",
     // Airtable base that receives guest nominations and sponsor inquiries.
     // The access token is NOT stored here: add it in Cloudflare as a secret named AIRTABLE_TOKEN.
-    "AIRTABLE_BASE_ID": "",
+    "AIRTABLE_BASE_ID": "appYkZEp2fDW2neFF",
     "CONTACT_EMAIL": "evan@propertyandtechnology.com"
   }
 }

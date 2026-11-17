@@ -529,7 +529,7 @@ async function handleForm(request, env, kind) {
 
   if (data.website2) return reply(200, form.thanks); // bot filled the hidden field: pretend it worked
 
-  const record = {};
+  const record = { Status: 'New' };
   for (const [key, column] of Object.entries(form.fields)) {
     const value = String(data[key] ?? '').trim().slice(0, 3000);
     if (value) record[column] = value;
