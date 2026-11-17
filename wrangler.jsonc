@@ -1,0 +1,26 @@
+{
+  // Cloudflare deploy settings for the Origins podcast site.
+  // public/ holds the static files (styles, images, per-episode extras).
+  // src/worker.js builds every page and handles the two forms.
+  "name": "origins-podcast",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-11-13",
+  "observability": { "enabled": true },
+  "assets": { "directory": "./public", "binding": "ASSETS" },
+  "vars": {
+    // Flip to "true" on launch day. While "false", search engines are told not to list the site.
+    "SITE_LIVE": "false",
+    "FEED_URL": "https://rss.beehiiv.com/podcasts/01a1b24d-e699-76d2-b11c-61513d0343c0.xml",
+    "YOUTUBE_URL": "https://www.youtube.com/channel/UCWFJG7mmioLxzvzTFs0_6eA",
+    // Fill these in once Spotify and Apple approve the show. Empty = button hidden.
+    "SPOTIFY_URL": "",
+    "APPLE_URL": "",
+    "NEWSLETTER_URL": "https://evanprothro-newsletter.beehiiv.com/",
+    "JOBS_URL": "https://propertyandtechnologyjobs.com",
+    "HUB_URL": "https://property-and-technology-hub.eh2homes.workers.dev",
+    // Airtable base that receives guest nominations and sponsor inquiries.
+    // The access token is NOT stored here: add it in Cloudflare as a secret named AIRTABLE_TOKEN.
+    "AIRTABLE_BASE_ID": "",
+    "CONTACT_EMAIL": "evan@propertyandtechnology.com"
+  }
+}

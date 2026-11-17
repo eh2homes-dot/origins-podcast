@@ -1,0 +1,21 @@
+{
+  "youtubeId": "VIDEO_ID_FROM_THE_YOUTUBE_LINK",
+  "tags": ["Topic one", "Topic two", "Topic three"],
+  "guest": {
+    "name": "Guest Name",
+    "title": "Title",
+    "company": "Company",
+    "linkedin": "https://www.linkedin.com/in/their-handle",
+    "photo": "/assets/guests/guest-name.jpg"
+  },
+  "chapters": [
+    { "time": "00:00", "title": "Cold open" },
+    { "time": "02:15", "title": "The first break" },
+    { "time": "48:30", "title": "This week's jobs roundup" }
+  ],
+  "notes": ["Key moment or lesson", "People, companies and links mentioned"],
+  "transcript": "Paste the full transcript here as one block of text.",
+  "roles": [
+    { "title": "Role title", "company": "Company", "location": "Remote", "url": "https://propertyandtechnologyjobs.com" }
+  ]
+}
