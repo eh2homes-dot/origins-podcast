@@ -345,7 +345,7 @@ ${notes.length ? `<ul class="soft" style="margin:0;padding-left:22px">${notes.ma
 
   const people = `<div class="card" style="gap:18px;align-items:stretch"><h2 class="kicker" style="margin:0">In this episode</h2>
 ${guest ? person(guest, [guest.title, guest.company].filter(Boolean).join(', ')) : ''}
-${person({ name: 'Evan Howard', linkedin: 'https://www.linkedin.com/in/evanprothrohoward' }, 'Host, Property and Technology')}</div>`;
+${person({ name: 'Evan Howard', photo: '/assets/evan.jpg', linkedin: 'https://www.linkedin.com/in/evanprothrohoward' }, 'Host, Property and Technology')}</div>`;
 
   const rolesBox = roles.length
     ? `<div class="box box-mint" id="roles" style="gap:6px"><h2 class="display" style="font-size:28px;margin-bottom:8px">Roles from this week’s roundup</h2>
@@ -402,9 +402,11 @@ function aboutPage(env) {
 </div>
 </section>
 <section class="band"><div class="wrap">
+<img class="host-photo" src="/assets/evan.jpg" alt="Evan Howard" width="220" height="220">
 <div class="stack" style="gap:12px">
 <div class="kicker">Your host</div>
 <h2 class="display" style="font-size:48px">Evan Howard</h2>
+<p style="margin:0;font-size:22px;font-weight:700">Connecting people, experiences, and revenue.</p>
 <p style="margin:0;font-size:19px">Evan runs Property and Technology, home of the Origins newsletter and the Founders &amp; Friends job board.</p>
 <a href="https://www.linkedin.com/in/evanprothrohoward">Evan on LinkedIn</a>
 </div>

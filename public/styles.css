@@ -36,6 +36,7 @@ h2.display{font-size:clamp(32px,4vw,44px)}
 .band{background:var(--mint);color:var(--ink);border-top:3px solid var(--ink);border-bottom:3px solid var(--ink)}
 .band .wrap{display:flex;flex-wrap:wrap;gap:40px;align-items:center;padding-top:56px;padding-bottom:56px}
 .band .wrap>*{flex:1 1 420px;min-width:0}
+.band .wrap>.host-photo{flex:0 0 220px;width:220px;height:220px;object-fit:cover;border:3px solid var(--ink);box-shadow:8px 8px 0 var(--pink)}
 .band a:not(.btn){color:var(--ink);font-weight:700}
 .band .kicker{color:var(--ink)}
 .section{padding-top:64px;padding-bottom:24px}
