@@ -106,4 +106,29 @@ summary{cursor:pointer;padding:20px 0;font-family:'Anton',sans-serif;font-size:2
 .site-foot .col{display:flex;flex-direction:column;gap:6px}
 .site-foot .col a{padding:6px 0}
 .site-foot .logo{font-size:36px;text-shadow:none}
+.anchors{display:flex;flex-wrap:wrap;gap:6px 24px;padding-top:8px;border-top:2px solid var(--line);font-weight:700}
+.anchors a{padding:12px 0;text-decoration:none}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.stat{background:var(--panel);border:2px solid var(--cream);padding:24px;display:flex;flex-direction:column;gap:4px}
+.stat-value{font-family:'Anton',sans-serif;font-size:clamp(44px,5vw,64px);line-height:1;color:var(--mint)}
+.stat-label{font-weight:700;font-size:18px}
+.card .num{font-size:clamp(40px,4vw,52px)}
+.format ul{margin:6px 0 0;padding-left:20px;color:var(--soft);display:flex;flex-direction:column;gap:6px}
+.format .kicker{font-size:13px}
+.price{margin-top:auto;padding-top:14px;font-family:'Anton',sans-serif;font-size:28px;color:var(--pink)}
+.price-open{font-family:inherit;font-size:16px;font-weight:700;color:var(--mint)}
+.table-scroll{overflow-x:auto;border:2px solid var(--cream)}
+.prices{width:100%;border-collapse:collapse;min-width:520px}
+.prices th,.prices td{text-align:left;padding:16px 20px;border-top:2px solid var(--line)}
+.prices thead th{border-top:0;background:var(--panel);font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--mint)}
+.prices .num-cell{text-align:right;font-weight:700;white-space:nowrap}
+.bar-head{display:flex;justify-content:space-between;gap:12px}
+.bar-track{height:12px;background:var(--panel);border:2px solid var(--cream)}
+.bar-fill{height:100%;background:var(--pink)}
+.logos{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+.logo-slot{min-height:110px;display:flex;align-items:center;justify-content:center;padding:20px;border:2px solid var(--cream);background:var(--panel);text-align:center}
+.logo-slot img{max-height:64px}
+.logo-open{border-style:dashed;border-color:var(--line);background:none;color:var(--muted);font-weight:700}
+.cards-two{grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+section[id]{scroll-margin-top:24px}
 @media (max-width:560px){.wrap{padding-left:20px;padding-right:20px}.cta,.formbox{padding:26px}.hero{gap:36px}}

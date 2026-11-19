@@ -280,7 +280,7 @@ ${list}
 ${newsletterCta(env)}
 <section class="wrap cards" style="padding-top:32px">
 <div class="card" style="padding:36px;gap:14px"><h2 class="display" style="font-size:36px">Be a guest</h2><p>Built or led something in property and technology? Tell us how you got your start, or nominate someone whose story should be heard.</p><a class="btn btn-mint" href="/guest">Nominate a guest</a></div>
-<div class="card" style="padding:36px;gap:14px"><h2 class="display" style="font-size:36px">Sponsor the show</h2><p>Put your company in front of the founders, executives and operators who listen.</p><a class="btn" href="/sponsor">Ask about sponsoring</a></div>
+<div class="card" style="padding:36px;gap:14px"><h2 class="display" style="font-size:36px">Sponsor the show</h2><p>Put your company in front of the founders, executives and operators who listen.</p><a class="btn" href="/sponsor">See the media kit</a></div>
 </section>`
   });
 }
@@ -459,28 +459,241 @@ ${HONEYPOT}
   });
 }
 
+// ---------- sponsor media kit ----------
+// Everything on /sponsor that changes over time lives in this one block.
+// To update the page, edit the values here. Nothing below it needs touching.
+//   - A stat with an empty value ('') stays hidden until you fill it in.
+//   - A format with an empty price ('') shows "Rates on request".
+//   - Empty lists (audience, partners, quotes) show their placeholder or stay hidden.
+const KIT = {
+  year: '2027',
+  statsAsOf: 'Nov 19, 2026', // the day the numbers below were pulled from beehiiv
+
+  // Flip to true to show the raw subscriber count next to the rates.
+  showSubscriberCount: false,
+  subscriberCount: '69',
+
+  stats: [
+    { value: '65%', label: 'Newsletter open rate', note: 'Last 4 weeks' },
+    { value: '17%', label: 'Of openers click a link', note: 'Last 4 weeks' },
+    { value: '+57%', label: 'Subscriber growth', note: 'Last 4 weeks' },
+    { value: 'Weekly', label: 'In inboxes every Wednesday', note: '8 issues since Sept 30, 2026' },
+    // LinkedIn. Fill in a value and the tile appears.
+    { value: '', label: 'LinkedIn impressions', note: 'Last 28 days' },
+    { value: '', label: 'LinkedIn followers', note: 'Evan Howard + Founders & Friends' },
+    { value: '', label: 'LinkedIn newsletter subscribers', note: '' },
+    // Later channels. Fill in when they are worth showing.
+    { value: '', label: 'Podcast listeners per episode', note: '' },
+    { value: '', label: 'YouTube views', note: 'Last 28 days' },
+    { value: '', label: 'X impressions', note: 'Last 28 days' }
+  ],
+
+  // Audience breakdown bars, e.g. { label: 'Founders and CEOs', percent: 38 }.
+  // Hidden while empty. Fill from the LinkedIn demographics export.
+  audienceByRole: [],
+  audienceBySeniority: [],
+
+  formats: [
+    {
+      name: 'Newsletter primary',
+      channel: 'Origins newsletter',
+      when: 'Every Wednesday',
+      specs: ['One per issue, placed near the top', 'Your logo or image, up to 100 words, one link', 'Written to read like the rest of the issue'],
+      price: ''
+    },
+    {
+      name: 'Newsletter secondary',
+      channel: 'Origins newsletter',
+      when: 'Every Wednesday',
+      specs: ['One per issue, placed mid-issue', 'Up to 40 words and one link'],
+      price: ''
+    },
+    {
+      name: 'Podcast host-read',
+      channel: 'Origins podcast',
+      when: 'Every other Wednesday',
+      specs: ['Read by Evan, up to 60 seconds', 'Two slots per episode', 'Founding slots open ahead of episode 01'],
+      price: ''
+    },
+    {
+      name: 'YouTube read',
+      channel: 'Origins on YouTube',
+      when: 'With each video episode',
+      specs: ['The host read carried in the video episode', 'Your link in the description'],
+      price: ''
+    },
+    {
+      name: 'Featured job listing',
+      channel: 'Newsletter + podcast',
+      when: 'Weekly',
+      specs: ['Your open role featured in the newsletter’s roles section', 'Named in the podcast jobs roundup'],
+      price: ''
+    },
+    {
+      name: 'Newsletter + podcast bundle',
+      channel: 'Both, same week',
+      when: 'Every other Wednesday',
+      specs: ['Newsletter primary and a podcast host-read in the same week', 'One message, two formats'],
+      price: ''
+    }
+  ],
+
+  // Lines under the pricing table.
+  pricingNotes: [
+    'Founding partners lock in launch rates for the length of their term.',
+    'Multi-issue and multi-episode terms are discounted.',
+    'Category exclusivity is available for the length of your term.'
+  ],
+
+  // Partner logos: { name: 'Company', logo: '/assets/partners/company.png', url: 'https://...' }
+  partners: [],
+  // Sponsor quotes: { quote: '...', name: 'Name', title: 'Title, Company' }
+  quotes: [],
+  // Ad examples: { format: 'Newsletter primary', image: '/assets/ads/example.png', caption: '...' }
+  adExamples: []
+};
+
 function sponsorPage(env) {
+  const stats = [
+    ...(KIT.showSubscriberCount ? [{ value: KIT.subscriberCount, label: 'Newsletter subscribers', note: `As of ${KIT.statsAsOf}` }] : []),
+    ...KIT.stats.filter((s) => s.value)
+  ];
+  const statTiles = stats
+    .map((s) => `<div class="stat"><div class="stat-value">${esc(s.value)}</div><div class="stat-label">${esc(s.label)}</div>${s.note ? `<div class="muted">${esc(s.note)}</div>` : ''}</div>`)
+    .join('');
+
+  const bars = (title, rows) =>
+    rows.length
+      ? `<div class="stack" style="gap:12px"><h3 style="margin:0;font-size:22px">${esc(title)}</h3>${rows
+          .map((r) => {
+            const pct = Math.max(0, Math.min(100, Number(r.percent) || 0));
+            return `<div class="bar"><div class="bar-head"><span>${esc(r.label)}</span><b>${pct}%</b></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div></div>`;
+          })
+          .join('')}</div>`
+      : '';
+  const breakdowns = [bars('By role', KIT.audienceByRole), bars('By seniority', KIT.audienceBySeniority)].filter(Boolean).join('');
+
+  const priceOf = (f) => (f.price ? esc(f.price) : 'Rates on request');
+  const formatCards = KIT.formats
+    .map((f) => `<div class="card format"><div class="kicker">${esc(f.channel)}</div><h3>${esc(f.name)}</h3><div class="muted">${esc(f.when)}</div><ul>${f.specs.map((x) => `<li>${esc(x)}</li>`).join('')}</ul><div class="price${f.price ? '' : ' price-open'}">${priceOf(f)}</div></div>`)
+    .join('');
+  const priceRows = KIT.formats
+    .map((f) => `<tr><th scope="row">${esc(f.name)}</th><td>${esc(f.when)}</td><td class="num-cell">${priceOf(f)}</td></tr>`)
+    .join('');
+
+  const partners = KIT.partners.length
+    ? KIT.partners
+        .map((p) => {
+          const img = /^\/[\w./-]+$/.test(p.logo || '') || safeUrl(p.logo) ? `<img src="${esc(p.logo)}" alt="${esc(p.name)}">` : `<b>${esc(p.name)}</b>`;
+          return safeUrl(p.url) ? `<a class="logo-slot" href="${esc(safeUrl(p.url))}">${img}</a>` : `<div class="logo-slot">${img}</div>`;
+        })
+        .join('')
+    : ['Founding partner', 'Founding partner', 'Founding partner', 'Your logo here'].map((t) => `<div class="logo-slot logo-open">${t}</div>`).join('');
+
+  const quotes = KIT.quotes.length
+    ? `<div class="cards" style="margin-top:28px">${KIT.quotes.map((q) => `<figure class="card" style="margin:0"><blockquote style="margin:0;font-size:19px">${esc(q.quote)}</blockquote><figcaption class="muted"><b>${esc(q.name)}</b>${q.title ? ', ' + esc(q.title) : ''}</figcaption></figure>`).join('')}</div>`
+    : '';
+
+  const examples = KIT.adExamples.length
+    ? `<section class="wrap section stack" id="examples" style="gap:28px"><h2 class="display">Ad examples</h2><div class="cards">${KIT.adExamples
+        .map((a) => `<figure class="card" style="margin:0"><div class="kicker">${esc(a.format)}</div>${/^\/[\w./-]+$/.test(a.image || '') ? `<img src="${esc(a.image)}" alt="">` : ''}${a.caption ? `<figcaption class="soft">${esc(a.caption)}</figcaption>` : ''}</figure>`)
+        .join('')}</div></section>`
+    : '';
+
+  const anchors = [['#audience', 'Audience'], ['#formats', 'What to book'], ...(KIT.adExamples.length ? [['#examples', 'Ad examples']] : []), ['#pricing', 'Pricing'], ['#partners', 'Partners'], ['#book', 'Book']]
+    .map(([href, label]) => `<a href="${href}">${label}</a>`)
+    .join('');
+
   return layout(env, {
     title: 'Sponsor',
-    description: 'Ask about sponsoring the Origins podcast.',
+    description: `Origins sponsorship and media kit for ${KIT.year}: the newsletter and podcast for the people building property and technology.`,
     path: '/sponsor',
     body: `<section class="wrap page-head stack">
-<div class="kicker">Sponsor the show</div>
-<h1 class="display" style="max-width:900px">Reach the people building property and <span class="pink">technology.</span></h1>
-<p class="lede">Origins listeners are founders, executives and operators across property and technology. Sponsoring puts your company in the conversation they chose to spend an hour with.</p>
+<div class="kicker">Sponsorship &amp; media kit · ${esc(KIT.year)}</div>
+<h1 class="display" style="max-width:980px">Reach the people building property and <span class="pink">technology.</span></h1>
+<p class="lede">Origins is a weekly newsletter and a podcast for founders, executives and operators in property and technology. A small, senior audience that opens, reads and clicks.</p>
+<div class="row"><a class="btn btn-pink" href="#book">Book a partnership</a><a class="btn" href="#formats">See what to book</a></div>
+<nav class="anchors" aria-label="On this page">${anchors}</nav>
 </section>
-<section class="wrap split">
+
+<section class="wrap" style="padding-bottom:16px">
+<div class="stats">${statTiles}</div>
+<p class="muted" style="margin:14px 0 0">Newsletter numbers from beehiiv, as of ${esc(KIT.statsAsOf)}.</p>
+</section>
+
+<section class="band" style="margin-top:56px"><div class="wrap">
+<img class="host-photo" src="/assets/evan.jpg" alt="Evan Howard" width="220" height="220">
+<div class="stack" style="gap:12px">
+<div class="kicker">Who is behind it</div>
+<h2 class="display" style="font-size:48px">Evan Howard</h2>
+<p style="margin:0;font-size:19px">Evan’s background is in enterprise sales to rental operators and proptech companies. He runs Property and Technology, home of the Origins newsletter, the Origins podcast and the Founders &amp; Friends job board.</p>
+<p style="margin:0;font-size:19px">Origins covers who is hiring, who is moving and how the leaders in this industry got their start.</p>
+<a href="https://www.linkedin.com/in/evanprothrohoward">Evan on LinkedIn</a>
+</div>
+</div></section>
+
+<section class="wrap section stack" style="gap:32px">
+<h2 class="display">Why sponsor Origins</h2>
+<div class="cards cards-two">
+<div class="card"><div class="num">01</div><h3>One industry, nothing else</h3><p>Every issue and every episode is about property and technology. No general business audience to pay for.</p></div>
+<div class="card"><div class="num">02</div><h3>Read by people who decide</h3><p>Readers come for executive moves and leadership roles. That is who the content is written for.</p></div>
+<div class="card"><div class="num">03</div><h3>They act on it</h3><p>About two in three subscribers open each issue, and about one in six of those click through.</p></div>
+<div class="card"><div class="num">04</div><h3>Early means remembered</h3><p>Founding partners get launch rates and the first say on category exclusivity as the audience grows.</p></div>
+</div>
+</section>
+
+<section class="wrap section stack" id="audience" style="gap:28px">
+<h2 class="display">The audience</h2>
+<div class="cards">
+<div class="card"><div class="num">2 in 3</div><h3>Subscribe with a work email</h3><p>Most of the list signs up from a company address, not a personal inbox.</p></div>
+<div class="card"><div class="num">54%</div><h3>Found Origins on LinkedIn</h3><p>More than half of subscribers came in through LinkedIn, where the industry already talks shop.</p></div>
+<div class="card"><h3>Who reads it</h3><p>People at property management software and proptech companies, and the operators who run rental portfolios and property management firms.</p></div>
+</div>
+${breakdowns ? `<div class="two" style="gap:40px">${breakdowns}</div>` : ''}
+</section>
+
+<section class="wrap section stack" id="formats" style="gap:28px">
+<h2 class="display">What to book</h2>
+<p class="lede">The newsletter goes out every Wednesday. The podcast releases every other Wednesday, in audio and on YouTube.</p>
+<div class="cards">${formatCards}</div>
+</section>
+${examples}
+<section class="wrap section stack" id="pricing" style="gap:24px">
+<h2 class="display">Pricing</h2>
+<div class="table-scroll"><table class="prices">
+<thead><tr><th scope="col">Format</th><th scope="col">Runs</th><th scope="col" class="num-cell">Rate</th></tr></thead>
+<tbody>${priceRows}</tbody>
+</table></div>
+<ul class="soft" style="margin:0;padding-left:22px">${KIT.pricingNotes.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>
+</section>
+
+<section class="wrap section stack" style="gap:24px">
+<div class="cards">
+<div class="box box-mint"><h2>A good fit if</h2><ul><li>You sell to, or hire from, property and technology.</li><li>You want your name in front of leaders week after week.</li><li>You value being first with a growing audience.</li></ul></div>
+<div class="box"><h2>Not the right fit if</h2><ul class="soft"><li>You need large reach this quarter.</li><li>You are buying on cost per click alone.</li></ul></div>
+</div>
+</section>
+
+<section class="wrap section stack" id="partners" style="gap:24px">
+<h2 class="display">${KIT.partners.length ? 'Partners' : 'Founding partners'}</h2>
+${KIT.partners.length ? '' : '<p class="lede">Founding partner slots are open. The first sponsors of Origins will be named here.</p>'}
+<div class="logos">${partners}</div>
+${quotes}
+</section>
+
+<section class="wrap split" id="book" style="padding-top:72px">
 <form class="main formbox" action="/api/sponsor" method="post" data-api>
-<h2 class="display" style="font-size:36px">Ask about sponsoring</h2>
+<h2 class="display" style="font-size:36px">Book a partnership</h2>
 <div class="two">${field('name', 'Your name', { required: true, autocomplete: 'name' })}${field('email', 'Work email', { type: 'email', placeholder: 'you@company.com', required: true, autocomplete: 'email' })}</div>
 <div class="two">${field('company', 'Company', { required: true, autocomplete: 'organization' })}${field('website', 'Company website', { type: 'url', placeholder: 'https://' })}</div>
-${field('goal', 'What are you hoping to get out of it?', { area: true, hint: 'Hiring, product awareness, a launch. Whatever you are working toward.' })}
+${field('goal', 'What would you like to book, and what are you working toward?', { area: true, hint: 'Name the formats you are interested in and the goal: hiring, product awareness, a launch.' })}
 ${HONEYPOT}
 <button class="btn btn-pink" type="submit">Send inquiry</button>
 <p class="hint" role="status" aria-live="polite" style="margin:0">Evan replies to every sponsor inquiry personally.</p>
 </form>
 <aside>
-<div class="box box-mint"><h2>What happens next</h2><ol><li>Your note goes straight to Evan.</li><li>He replies to talk through what you are working toward.</li><li>If it is a fit, you shape the sponsorship together.</li></ol></div>
+<div class="box box-mint"><h2>What happens next</h2><ol><li>Your note goes straight to Evan.</li><li>He replies with current rates and open dates.</li><li>If it is a fit, you shape the sponsorship together.</li></ol></div>
+<div class="box"><h2>Want something custom?</h2><p class="soft">Mixes of placements, longer terms and category exclusivity are all on the table. Say what you have in mind.</p></div>
 </aside>
 </section>`
   });
