@@ -22,5 +22,23 @@
     // The access token is NOT stored here: add it in Cloudflare as a secret named AIRTABLE_TOKEN.
     "AIRTABLE_BASE_ID": "appYkZEp2fDW2neFF",
     "CONTACT_EMAIL": "evan@propertyandtechnology.com"
+  },
+  // Settings for Cloudflare's preview builds of pull request branches (`wrangler preview`).
+  // Same public links as the live site, but always hidden from search engines, and
+  // AIRTABLE_BASE_ID is left empty so preview forms never write to the live Airtable base
+  // (they show the "please email us" message instead).
+  "previews": {
+    "vars": {
+      "SITE_LIVE": "false",
+      "FEED_URL": "https://rss.beehiiv.com/podcasts/01a1b24d-e699-76d2-b11c-61513d0343c0.xml",
+      "YOUTUBE_URL": "https://www.youtube.com/channel/UCWFJG7mmioLxzvzTFs0_6eA",
+      "SPOTIFY_URL": "",
+      "APPLE_URL": "",
+      "NEWSLETTER_URL": "https://evanprothro-newsletter.beehiiv.com/",
+      "JOBS_URL": "https://propertyandtechnologyjobs.com",
+      "HUB_URL": "https://property-and-technology-hub.eh2homes.workers.dev",
+      "AIRTABLE_BASE_ID": "",
+      "CONTACT_EMAIL": "evan@propertyandtechnology.com"
+    }
   }
 }
