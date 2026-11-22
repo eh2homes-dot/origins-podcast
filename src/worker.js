@@ -501,17 +501,10 @@ const KIT = {
   samples: [
     {
       kind: 'Newsletter issue',
-      title: 'Eli Wachs wants his first partnerships lead @ Footprint. Craig Robinson, new Roofstock CEO + Todd Jable is COO at Related Affordable',
-      about: 'A founder hiring his first partnerships lead, two executive moves, and the week’s open roles.',
-      date: 'Oct 21, 2026',
-      url: 'https://evanprothro-newsletter.beehiiv.com/p/eli-wachs-wants-his-first-partnerships-lead-footprint-craig-robinson-is-new-roofstock-ceo-and-todd-j'
-    },
-    {
-      kind: 'Origin story + jobs',
-      title: 'Long-time Melder heads to Super AI. Backyard Ventures Origin Story + $25M Fund.',
-      about: 'An origin story on a proptech venture fund, alongside the week’s moves and roles.',
-      date: 'Oct 14, 2026',
-      url: 'https://evanprothro-newsletter.beehiiv.com/p/long-time-melder-heads-to-super-ai-backyard-ventures-origin-story-25m-fund'
+      title: 'AMH needs national leasing VP + Mesa Resi on the hunt for the GM who will build their talent engine.',
+      about: 'A national leasing seat at one of the largest operators, a featured GM of Talent search, founding seats and the week’s moves.',
+      date: 'Nov 18, 2026',
+      url: 'https://evanprothro-newsletter.beehiiv.com/p/amhs-national-leasing-vp-and-ironledgers-founding-seats'
     },
     {
       kind: 'Newsletter issue',
@@ -519,15 +512,33 @@ const KIT = {
       about: 'Founding and leadership roles at three proptech companies, plus board and executive appointments.',
       date: 'Nov 4, 2026',
       url: 'https://evanprothro-newsletter.beehiiv.com/p/haven-wants-a-founding-engineer-smartrent-and-property-meld-want-marketing-leaders'
+    },
+    {
+      kind: 'Newsletter issue',
+      title: 'Eli Wachs wants his first partnerships lead @ Footprint. Craig Robinson, new Roofstock CEO + Todd Jable is COO at Related Affordable',
+      about: 'A founder hiring his first partnerships lead, two executive moves, and the week’s open roles.',
+      date: 'Oct 21, 2026',
+      url: 'https://evanprothro-newsletter.beehiiv.com/p/eli-wachs-wants-his-first-partnerships-lead-footprint-craig-robinson-is-new-roofstock-ceo-and-todd-j'
     }
   ],
+
+  // What every sponsor gets after a newsletter placement runs.
+  // sampleReport points at a file in public/; leave it '' to hide the download button.
+  reporting: {
+    turnaround: 'within 48 hours of the send',
+    metrics: ['Emails delivered', 'Unique opens and open rate', 'Unique clicks on your link', 'Click rate as a share of opens'],
+    analysis: ['What worked in your ad, tied to the numbers', 'What to try in your next placement'],
+    method: 'Clicks are beehiiv’s verified unique email clicks, so bot clicks are excluded.',
+    sampleReport: '/assets/media-kit/origins-sample-sponsor-report.pdf',
+    sampleNote: 'Sample uses real numbers from a Nov 18, 2026 featured placement, with the company’s name removed.'
+  },
 
   formats: [
     {
       name: 'Newsletter primary',
       channel: 'Origins newsletter',
       when: 'Every Wednesday',
-      specs: ['One per issue, placed near the top', 'Your logo or image, up to 100 words, one link', 'Written to read like the rest of the issue'],
+      specs: ['One per issue, placed near the top', 'Your logo or image, up to 100 words, one link', 'Written to read like the rest of the issue', 'Checked for spam-filter triggers and link count before it runs, and you approve the final copy'],
       price: ''
     },
     {
@@ -636,7 +647,20 @@ function sponsorPage(env) {
         .join('')}</div></div>`
     : '';
 
-  const anchors = [['#audience', 'Audience'], ['#work', 'Recent work'], ['#reach', 'Reach'], ['#formats', 'Ways to work together'], ['#book', 'Contact']]
+  const R = KIT.reporting;
+  const sampleHref = /^\/[\w./-]+\.pdf$/.test(R.sampleReport || '') ? R.sampleReport : '';
+  const reporting = `<section class="wrap section stack" id="reporting" style="gap:28px">
+<div class="stack" style="gap:8px"><div class="kicker">05 · After it runs</div><h2 class="display">Your report</h2></div>
+<p class="lede">Every newsletter sponsor gets a performance report for each placement, ${esc(R.turnaround)}. No dashboard to log into.</p>
+<div class="cards cards-two">
+<div class="box"><h2>The numbers</h2><ul>${R.metrics.map((m) => `<li>${esc(m)}</li>`).join('')}</ul></div>
+<div class="box box-mint"><h2>The read on your ad</h2><ul>${R.analysis.map((m) => `<li>${esc(m)}</li>`).join('')}</ul></div>
+</div>
+<p class="muted" style="margin:0">${esc(R.method)}</p>
+${sampleHref ? `<div class="row" style="align-items:center;gap:12px 20px"><a class="btn btn-pink" href="${esc(sampleHref)}">See a sample report (PDF)</a><span class="muted">${esc(R.sampleNote)}</span></div>` : ''}
+</section>`;
+
+  const anchors = [['#audience', 'Audience'], ['#work', 'Recent work'], ['#reach', 'Reach'], ['#formats', 'Ways to work together'], ['#reporting', 'Reporting'], ['#book', 'Contact']]
     .map(([href, label]) => `<a href="${href}">${label}</a>`)
     .join('');
 
@@ -702,6 +726,8 @@ ${examples}
 </div>
 </section>
 
+${reporting}
+
 <section class="wrap section stack" id="partners" style="gap:24px">
 <h2 class="display">${KIT.partners.length ? 'Partners' : 'Founding partners'}</h2>
 ${KIT.partners.length ? '' : '<p class="lede">Founding partner slots are open. The first sponsors of Origins will be named here.</p>'}
@@ -711,7 +737,7 @@ ${quotes}
 
 <section class="wrap split" id="book" style="padding-top:72px">
 <form class="main formbox" action="/api/sponsor" method="post" data-api>
-<div class="kicker">05 · Contact</div>
+<div class="kicker">06 · Contact</div>
 <h2 class="display" style="font-size:36px">Work with Origins</h2>
 <div class="two">${field('name', 'Your name', { required: true, autocomplete: 'name' })}${field('email', 'Work email', { type: 'email', placeholder: 'you@company.com', required: true, autocomplete: 'email' })}</div>
 <div class="two">${field('company', 'Company', { required: true, autocomplete: 'organization' })}${field('website', 'Company website', { type: 'url', placeholder: 'https://' })}</div>
